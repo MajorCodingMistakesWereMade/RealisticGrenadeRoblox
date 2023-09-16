@@ -62,3 +62,4 @@ replicated.Boom2.OnClientEvent:Connect(function()
 	local deathDebounce = false
 end)
 
+--oops didnr make it lua
