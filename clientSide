@@ -1,0 +1,64 @@
+local tweenService = game:GetService("TweenService")
+local players = game:GetService("Players")
+
+local debounce = false
+local deathDebounce = false
+
+local localPlayer = players.LocalPlayer
+
+local replicated = game:GetService("ReplicatedStorage")
+
+local gui = localPlayer.PlayerGui:WaitForChild("ScreenGui")
+
+replicated.Boom.OnClientEvent:Connect(function()
+	if deathDebounce == true then return end
+
+	if debounce == true then return end
+	debounce = true
+	gui.Frame.flashbang:Play()
+	gui.Frame.BackgroundTransparency = .4
+	gui.Frame.BackgroundColor3 = Color3.new(0.611765, 0.396078, 0.294118)
+	
+	wait(.6)
+	if deathDebounce == true then return end
+
+	local tween = tweenService:Create(localPlayer.PlayerGui.ScreenGui.Frame, TweenInfo.new(7), {BackgroundTransparency = 1, BackgroundColor3 = Color3.new(0.65098, 0.694118, 0.827451)})
+	tween:Play()
+	tween.Completed:Wait()
+	debounce = false	
+end)
+
+localPlayer.CharacterAdded:Connect(function()
+	
+	localPlayer.PlayerGui.ScreenGui.Frame.BackgroundTransparency = 1
+	local character = localPlayer.Character
+	local humanoid:Humanoid = character:WaitForChild("Humanoid")
+	if humanoid then
+		
+		humanoid.Died:Connect(function()
+			if deathDebounce == true then return end
+
+			gui.Frame.death:Play()
+			gui.Frame.BackgroundTransparency = .6
+			gui.Frame.BackgroundColor3 = Color3.new(0.611765, 0.396078, 0.294118)
+			wait(.6)
+			local tween = tweenService:Create(localPlayer.PlayerGui.ScreenGui.Frame, TweenInfo.new(2), {BackgroundTransparency = 0, BackgroundColor3 = Color3.new(0.827451, 0.286275, 0.247059)})
+			tween:Play()
+
+		end)
+	end
+	
+end)
+
+replicated.Boom2.OnClientEvent:Connect(function()
+	if deathDebounce == true then return end
+	local deathDebounce = true
+	gui.Frame.death:Play()
+	gui.Frame.BackgroundTransparency = .6
+	gui.Frame.BackgroundColor3 = Color3.new(0.611765, 0.396078, 0.294118)
+
+	local tween = tweenService:Create(localPlayer.PlayerGui.ScreenGui.Frame, TweenInfo.new(2), {BackgroundTransparency = 0, BackgroundColor3 = Color3.new(0.827451, 0.286275, 0.247059)})
+	tween:Play()
+	local deathDebounce = false
+end)
+
